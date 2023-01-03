@@ -1,9 +1,11 @@
 import { server as WebSocketServer } from 'websocket';
 import http from 'http';
 import { MongoClient } from 'mongodb';
+
 const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
 // // Create a new MongoClient
 const client = new MongoClient(uri);
+
 async function run() {
 	try {
 		// Connect the client to the server (optional starting in v4.7)
@@ -14,7 +16,7 @@ async function run() {
 
 		// create collection if doesnt exist
 		const student = { name: 'John Smith', age: 30, major: 'Computer Science' };
-		const insert = sksujmi.collection('conversation').insertOne(student);
+		const insert = await sksujmi.collection('conversation').insertOne(student);
 		console.log(insert);
 		sksujmi
 			.collection('conversation')
