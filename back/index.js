@@ -8,8 +8,15 @@ async function run() {
 	try {
 		// Connect the client to the server (optional starting in v4.7)
 		await client.connect();
+
 		// Establish and verify connection
 		const sksujmi = client.db('sksujmi');
+
+		// create collection if doesnt exist
+		const student = { name: 'John Smith', age: 30, major: 'Computer Science' };
+		sksujmi.collection('conversation').insertOne(student, (err, res) => {
+			console.log(err, res);
+		});
 		sksujmi
 			.collection('conversation')
 			.find()
@@ -18,6 +25,7 @@ async function run() {
 					console.log(err);
 					return;
 				}
+				console.log('database zajebiste mongodb connected');
 				console.log(res);
 			});
 	} catch (e) {
