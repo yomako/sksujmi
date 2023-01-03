@@ -14,13 +14,12 @@ async function run() {
 
 		// create collection if doesnt exist
 		const student = { name: 'John Smith', age: 30, major: 'Computer Science' };
-		sksujmi.collection('conversation').insertOne(student, (err, res) => {
-			console.log(err, res);
-		});
+		const insert = sksujmi.collection('conversation').insertOne(student);
+		console.log(insert);
 		sksujmi
 			.collection('conversation')
 			.find()
-			.toArray(function (err, res) {
+			.forEach(function (err, res) {
 				if (err) {
 					console.log(err);
 					return;
