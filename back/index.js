@@ -1,18 +1,12 @@
 import { server as WebSocketServer } from 'websocket';
 import http from 'http';
 import { MongoClient } from 'mongodb';
-function dba() {
-	const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
-	const client = new MongoClient(uri);
-	return client.db('sksujmi');
-	// console.log(client.db('sksujmi'));
-}
+
 const db = (col) => {
 	const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
 	const client = new MongoClient(uri);
 	console.log('connected to db');
 	return client.db('sksujmi').collection(col);
-	// console.log(client.db('sksujmi'));
 };
 const collection = db('conversation');
 collection.find().forEach((el) => {
