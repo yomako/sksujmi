@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
+import WebsocketApi from "./websocket";
 
 interface AuthStoreType {
   isLoggedIn: boolean;
@@ -17,10 +18,18 @@ const AuthStore = React.createContext<AuthStoreType>({
 });
 
 export const AuthStoreProvider = (props: IProps) => {
+  const api = useContext(WebsocketApi);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const loginAsGuestHandler = () => {
     setIsLoggedIn(true);
+    api
+      .send({
+        ID: "koszka",
+        content: "bardzo duża koszka",
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const logoutHandler = () => {
