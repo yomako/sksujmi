@@ -1,40 +1,28 @@
 import { server as WebSocketServer } from 'websocket';
 import http from 'http';
 import { MongoClient } from 'mongodb';
-
-const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
-// // Create a new MongoClient
-const client = new MongoClient(uri);
-
-async function run() {
-	try {
-		// Connect the client to the server (optional starting in v4.7)
-		await client.connect();
-
-		// Establish and verify connection
-		const sksujmi = client.db('sksujmi');
-
-		// create collection if doesnt exist
-		const student = { name: 'John Smith', age: 30, major: 'Computer Science' };
-		const insert = await sksujmi.collection('conversation').insertOne(student);
-		console.log(insert);
-		sksujmi
-			.collection('conversation')
-			.find()
-			.forEach(function (err, res) {
-				if (err) {
-					console.log(err);
-					return;
-				}
-				console.log('database zajebiste mongodb connected');
-				console.log(res);
-			});
-	} catch (e) {
-		console.log(e);
-	}
+function dba() {
+	const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
+	const client = new MongoClient(uri);
+	return client.db('sksujmi');
+	// console.log(client.db('sksujmi'));
 }
-run();
-// run().catch(console.dir);
+const db = (col) => {
+	const uri = 'mongodb://localhost:27017/?maxPoolSize=20&w=majority';
+	const client = new MongoClient(uri);
+	console.log('connected to db');
+	return client.db('sksujmi').collection(col);
+	// console.log(client.db('sksujmi'));
+};
+const collection = db('conversation');
+collection.find().forEach((el) => {
+	console.log(el);
+});
+const student = { name: 'John Smith', age: 30, major: 'Computer Science' };
+collection.insertOne(student).then((res) => {
+	console.log(res);
+});
+
 const server = http.createServer(function (request, response) {
 	console.log(new Date() + ' Received request for ' + request.url);
 	response.writeHead(404);
