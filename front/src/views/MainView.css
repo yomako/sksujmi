@@ -1,0 +1,22 @@
+.main-card {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(12, 24, 24);
+  width: 80vw;
+  height: 80vh;
+  align-items: center;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+}
+
+.header-sksujmi {
+  text-align: left;
+  padding-left: 5em;
+}
+
+.main-section {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+}

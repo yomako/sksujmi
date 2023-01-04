@@ -1,0 +1,42 @@
+.conversation-overview-section {
+    width: 70%;
+}
+
+.conversation-overview-paper {
+    width: 100%;
+    height: 100%;
+}
+
+.conversation-overview-content {
+    width: 100%;
+    height: 90%;
+}
+
+.conversation-overview-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* width: 100%; */
+    height: 10%;
+    padding: 0 2em;
+}
+
+.new-message-content {
+    width: 97%;
+    margin: 5px 0 5px 6px;
+}
+
+.new-message-send-button {
+    width: 10%;
+    height: fit-content;
+}
+
+.new-message-paper {
+    width: 85%;
+}
+
+.conversation-message {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1em 1em 0 0;
+}
