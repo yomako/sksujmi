@@ -13,6 +13,7 @@
   "dependencies": {
     "http": "0.0.1-security",
     "mongodb": "4.13",
+    "random-hash": "^4.0.1",
     "websocket": "^1.0.34"
   }
 }

@@ -2,12 +2,12 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 interface Message {
-  ID: string;
-  content: string;
+  action: string;
+  content: Record<string, any>;
 }
 
 interface WebsocketApiType {
-  send: (message: Message) => Promise<unknown>;
+  send: (message: Message) => Promise<Message & { ID: string }>;
 }
 
 interface IProps {
@@ -15,7 +15,15 @@ interface IProps {
 }
 
 const WebsocketApi = React.createContext<WebsocketApiType>({
-  send: (message: Message) => Promise.resolve(),
+  send: (message: Message) =>
+    Promise.resolve({
+      ID: "",
+      action: "",
+      content: {
+        code: 404,
+        message: "no response",
+      },
+    }),
 });
 
 export const WebsocketApiProvider = (props: IProps) => {
@@ -38,15 +46,27 @@ export const WebsocketApiProvider = (props: IProps) => {
   }, [lastMessage, setMessageHistory]);
 
   const handleSendMessage = (message: Message) => {
-    sendMessage(JSON.stringify(message));
-    return new Promise((resolve, reject) => {
+    const messageToSend: Message & { ID: string } = {
+      ID: ((Math.random() + 1) * 13434).toString(36).replace(".", ""),
+      ...message,
+    };
+    sendMessage(JSON.stringify(messageToSend));
+    return new Promise<Message & { ID: string }>((resolve, reject) => {
       setTimeout(() => {
         let response = messageHistoryRef.current.find(
-          (el) => JSON.parse(el.data)["ID"] === message.ID
+          (el) => JSON.parse(el.data)["ID"] === messageToSend.ID
         );
-        if (!!response) resolve(response);
-        else {
-          reject("no response");
+        if (!!response) {
+          resolve(JSON.parse(response.data));
+        } else {
+          reject({
+            ID: "",
+            action: "",
+            content: {
+              code: 404,
+              message: "no response",
+            },
+          });
         }
       }, 300);
     });

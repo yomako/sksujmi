@@ -1,6 +1,7 @@
 import { server as WebSocketServer } from "websocket";
 import http from "http";
 import { MongoClient } from "mongodb";
+import { generateHash } from "random-hash";
 
 const db = (col) => {
   const uri = "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
@@ -34,12 +35,37 @@ wsServer.on("request", (request) => {
   const connection = request.accept();
 
   connection.on("message", (message) => {
-    if (!message.utf8Data) {
-      newUser(request.key, connection);
-      return;
-    }
+    const messageDecoded = JSON.parse(message.utf8Data);
+    // if (!message.utf8Data) {
+    //   newUser(request.key, connection);
+    //   return;
+    // }
 
-    sendMessage(JSON.parse(message.utf8Data), connection);
+    // sendMessage(JSON.parse(message.utf8Data), connection);
+    switch (messageDecoded.action) {
+      case "new-guest":
+        sendMessage(
+          {
+            ...messageDecoded,
+            content: {
+              token: generateHash({ length: 20 }),
+            },
+          },
+          connection
+        );
+        break;
+      default:
+        sendMessage(
+          {
+            ...messageDecoded,
+            content: {
+              code: 404,
+              message: "action not found",
+            },
+          },
+          connection
+        );
+    }
   });
 
   connection.on("close", () => {
@@ -57,9 +83,7 @@ const newUser = (requestKey, connection) => {
     })
   );
 };
-const sendMessage = ({ ID, content }, connection) => {
-  if (!!connection)
-    connection.send(JSON.stringify({ ID: ID, content: content }));
-  if (!!websockets[ID])
-    websockets[ID].send(JSON.stringify({ ID: ID, content: content }));
+const sendMessage = (messageToSend, connection) => {
+  if (!!connection) connection.send(JSON.stringify(messageToSend));
+  // if (!!websockets[ID]) websockets[ID].send(JSON.stringify(messageToSend));
 };
